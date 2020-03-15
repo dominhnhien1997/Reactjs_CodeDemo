@@ -14,9 +14,20 @@ interface IState {
 const App =() =>{
   const [activities,setactivities] =useState<IState>();
   const [selectActivities,setSelectActivities] =useState<IActivity|null>(null);
+  const [editMode,setEditMode] =useState(false);
+ 
+  const handleEditMode =(editMode:boolean) =>{
+    setEditMode(editMode);
+  }
 
   const handleSelectActivitis =(id:string) =>{
+    setEditMode(false);
     setSelectActivities(activities!.activities.filter(a=>a.id===id)[0]);
+  }
+
+  const handleOpenFormCreate =() =>{
+      setSelectActivities(null);
+      setEditMode(true);
   }
 
   useEffect(()=>{
@@ -28,10 +39,17 @@ const App =() =>{
 
   return (
     <div>
-      <Navbar/>
+      <Navbar openCreateFrom ={handleOpenFormCreate}/>
       <Container style={{marginTop:'7em'}}>
         <List>
-            <ActivityDashboard activities={activities?.activities} setSelectActivities={handleSelectActivitis} selectActivities={selectActivities}/>
+            <ActivityDashboard 
+              activities={activities?.activities} 
+              setSelectActivities={handleSelectActivitis} 
+              selectActivities={selectActivities}
+              editMode={editMode}
+              setEditMode ={handleEditMode}
+              setSelectedActivity={setSelectActivities}
+            />
         </List>
       </Container>
     </div>

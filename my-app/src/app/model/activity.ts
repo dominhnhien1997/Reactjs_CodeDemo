@@ -4,5 +4,5 @@ export interface IActivity {
     desscription:string,
     category:string,
     venue:string,
-    date:Date
+    date:string
 }

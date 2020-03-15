@@ -4,9 +4,11 @@ import {Card, Image, CardContent, Icon, Button} from 'semantic-ui-react'
 
 interface IProp {
     activity :IActivity|null,
+    setEditMode:(editMode:boolean)=>void,
+    selectedActivity:(acti:IActivity|null)=>void
 }
 
-const ActivityDetails:React.FC<IProp>=({activity})=>{
+const ActivityDetails:React.FC<IProp>=({activity,setEditMode,selectedActivity})=>{
     return(
         <Card fluid>
             <Image src="https://s1.media.ngoisao.vn/resize_580/news/2020/01/12/ngoc-trinh-05-ngoisao.vn-w620-h457.jpg" wrapped ui={false}/>
@@ -27,8 +29,8 @@ const ActivityDetails:React.FC<IProp>=({activity})=>{
             </Card.Content>
             <CardContent extra>
                 <Button.Group widths={2}>
-                    <Button basic color="blue" content="Edit"/>
-                    <Button basic color="grey" content="Cancel"/>
+                    <Button basic color="blue" onClick={()=>setEditMode(true)} content="Edit"/>
+                    <Button basic color="grey" onClick={()=>selectedActivity(null)} content="Cancel"/>
                 </Button.Group>
             </CardContent>
         </Card>
