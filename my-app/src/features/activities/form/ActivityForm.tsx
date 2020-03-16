@@ -2,14 +2,17 @@ import React, { useState, FormEvent } from 'react'
 import {Segment,Form, Button} from 'semantic-ui-react'
 import { IActivity } from '../../../app/model/activity';
 import { HtmlInputrops } from 'semantic-ui-react/dist/commonjs/generic';
-
+import {v4 as uuid} from 'uuid';
 interface IProps {
     editMode:boolean
     activity:IActivity|null,
     setEditMode:(editMode:boolean)=>void,
+    createActivity:(acti:IActivity)=>void,
+    editActivity:(acti:IActivity)=>void
+    
 }
 
-const ActivityForm:React.FC<IProps> =({editMode,activity:initializeForSate,setEditMode}) =>{
+const ActivityForm:React.FC<IProps> =({editMode,activity:initializeForSate,setEditMode, createActivity, editActivity}) =>{
 
     const initializeForm =() =>{
         if (initializeForSate) {
@@ -42,7 +45,15 @@ const ActivityForm:React.FC<IProps> =({editMode,activity:initializeForSate,setEd
     }
 
     const handleSubmit =() =>{
-        console.log('NhienDm tesst demo submit');
+        if (activity.id.length=== 0) {
+            let newActivity = {
+                ... activity,
+                id:uuid()
+            }
+            createActivity(newActivity)
+        } else {
+            editActivity(activity);
+        }
     }
 
 

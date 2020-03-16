@@ -12,7 +12,7 @@ interface IState {
 }
 
 const App =() =>{
-  const [activities,setactivities] =useState<IState>();
+  const [activities,setActivities] =useState<IState>({activities:[],count:0});
   const [selectActivities,setSelectActivities] =useState<IActivity|null>(null);
   const [editMode,setEditMode] =useState(false);
  
@@ -26,14 +26,30 @@ const App =() =>{
   }
 
   const handleOpenFormCreate =() =>{
-      setSelectActivities(null);
-      setEditMode(true);
+    setSelectActivities(null);
+    setEditMode(true);
+  }
+
+  const handleCreateActivity = (activity:IActivity) =>{
+    setActivities(preState=>({...preState, activities: [...preState.activities, activity]}));
+    setSelectActivities(activity);
+    setEditMode(false);
+  }
+
+  const handleEditACtivity =(activity:IActivity) =>{
+    setActivities(preState=>({...preState,activities:[...preState.activities.filter(a=>a.id !== activity.id), activity]}))
+    setSelectActivities(activity);
+    setEditMode(false);
+  }
+
+  const handleDeleteActivity =(id:string) =>{
+    setActivities(preState=>({...preState,activities:[...preState.activities.filter(a=>a.id !==id)]}))
   }
 
   useEffect(()=>{
     axios.get<IState>("http://localhost:56915/api/activity")
           .then(response=>{
-              setactivities(response.data);
+            setActivities(response.data);
           });
   },[])
 
@@ -49,6 +65,9 @@ const App =() =>{
               editMode={editMode}
               setEditMode ={handleEditMode}
               setSelectedActivity={setSelectActivities}
+              createActivity ={handleCreateActivity}
+              editActivity ={handleEditACtivity}
+              deleteActivity ={handleDeleteActivity}
             />
         </List>
       </Container>

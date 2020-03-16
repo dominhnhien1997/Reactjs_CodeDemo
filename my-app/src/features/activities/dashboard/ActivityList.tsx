@@ -5,10 +5,10 @@ import moment from 'moment';
 
 interface IProps {
     activities? :IActivity[],
-    setSelectActivities:(id:string)=>void
+    setSelectActivities:(id:string)=>void,
+    deleteActivity:(id:string)=>void
 }
-
-const ActivityList:React.FC<IProps> = ({activities, setSelectActivities}) =>{
+    const ActivityList:React.FC<IProps> = ({activities, setSelectActivities, deleteActivity}) =>{
     return(
         <Segment clearing>
             <Item.Group divided>
@@ -30,6 +30,11 @@ const ActivityList:React.FC<IProps> = ({activities, setSelectActivities}) =>{
                                     content='View'
                                     color='blue'
                                     onClick={()=>setSelectActivities(activity.id)}/>
+                                <Button 
+                                    floated='right' 
+                                    content='Delete'
+                                    color='red'
+                                    onClick={()=>deleteActivity(activity.id)}/>
                                 <Label basic content={activity.category}/>
                             </Item.Extra>
                         </Item.Content>
