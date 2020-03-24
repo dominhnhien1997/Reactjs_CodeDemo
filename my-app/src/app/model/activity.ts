@@ -6,3 +6,8 @@ export interface IActivity {
     venue:string,
     date:string
 }
+
+export interface IListActivity {
+    activities :IActivity[],
+    count:number
+}

@@ -2,17 +2,13 @@ import React,{useState,useEffect} from 'react';
 import axios from 'axios';
 import './style.css'
 import  {List,Container } from 'semantic-ui-react';
-import {IActivity} from '../model/activity';
+import {IActivity, IListActivity} from '../model/activity';
 import Navbar from '../../features/nav/Navbar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
-
-interface IState {
-  activities :IActivity[],
-  count:number
-}
+import agent from '../api/agent'
 
 const App =() =>{
-  const [activities,setActivities] =useState<IState>({activities:[],count:0});
+  const [activities,setActivities] =useState<IListActivity>({activities:[],count:0});
   const [selectActivities,setSelectActivities] =useState<IActivity|null>(null);
   const [editMode,setEditMode] =useState(false);
  
@@ -31,26 +27,35 @@ const App =() =>{
   }
 
   const handleCreateActivity = (activity:IActivity) =>{
-    setActivities(preState=>({...preState, activities: [...preState.activities, activity]}));
-    setSelectActivities(activity);
-    setEditMode(false);
+    agent.Activities.create(activity)
+          .then(()=>{
+              setActivities(preState=>({...preState, activities: [...preState.activities, activity]}));
+              setSelectActivities(activity);
+              setEditMode(false);
+          })
   }
 
   const handleEditACtivity =(activity:IActivity) =>{
-    setActivities(preState=>({...preState,activities:[...preState.activities.filter(a=>a.id !== activity.id), activity]}))
-    setSelectActivities(activity);
-    setEditMode(false);
+    agent.Activities.update(activity)
+        .then(()=>{
+          setActivities(preState=>({...preState,activities:[...preState.activities.filter(a=>a.id !== activity.id), activity]}))
+          setSelectActivities(activity);
+          setEditMode(false);
+        });
   }
 
   const handleDeleteActivity =(id:string) =>{
-    setActivities(preState=>({...preState,activities:[...preState.activities.filter(a=>a.id !==id)]}))
+    agent.Activities.delete(id)
+          .then(()=>{
+              setActivities(preState=>({...preState,activities:[...preState.activities.filter(a=>a.id !==id)]}))
+          })
   }
 
   useEffect(()=>{
-    axios.get<IState>("http://localhost:56915/api/activity")
-          .then(response=>{
-            setActivities(response.data);
-          });
+      agent.Activities.list()
+            .then(response=>{
+                setActivities(response);
+            })
   },[])
 
   return (
