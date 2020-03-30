@@ -5,13 +5,15 @@ import  {List,Container } from 'semantic-ui-react';
 import {IActivity, IListActivity} from '../model/activity';
 import Navbar from '../../features/nav/Navbar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
-import agent from '../api/agent'
+import agent from '../api/agent';
+import LoadingComponent from './LoadingComponent';
 
 const App =() =>{
+
   const [activities,setActivities] =useState<IListActivity>({activities:[],count:0});
   const [selectActivities,setSelectActivities] =useState<IActivity|null>(null);
   const [editMode,setEditMode] =useState(false);
- 
+  const [loading,setLoading] = useState(true);
   const handleEditMode =(editMode:boolean) =>{
     setEditMode(editMode);
   }
@@ -55,8 +57,10 @@ const App =() =>{
       agent.Activities.list()
             .then(response=>{
                 setActivities(response);
-            })
+            }).then(()=>setLoading(false));
   },[])
+
+  if (loading) return <LoadingComponent content='Loading activities ....'/>
 
   return (
     <div>
